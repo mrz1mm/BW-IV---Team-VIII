@@ -1,0 +1,176 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EpicockX</title>
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
+    <link rel="stylesheet" href="~/css/mybootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EpicockX.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+</head>
+<body>
+
+
+    <header class="bg-white my-0 py-0">
+        <nav class="container-fluid d-flex align-items-center justify-content-between py-3 MainColor" aria-label="Global">
+            <div class="d-flex flex-lg-fill">
+                <img class="logoImage" src="./assets/images/logo.jpg" alt="Logo Epicock">
+            </div>
+            <div class="d-flex gap-3 gap-lg-4">
+                <a  asp-controller="Home" asp-action="Index" class="text-white fw-semibold">Homepage</a>
+
+                @if (Context.User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Home" asp-action="Catalog" class="text-white fw-semibold">Catalogo</a>
+                    <a asp-controller="Cart" asp-action="Index" class="text-white fw-semibold">Carrello</a>
+                    <a asp-controller="BackOffice" asp-action="Index" class="text-white fw-semibold">Admin</a>
+                }
+
+
+            </div>
+            <div class="d-lg-flex flex-lg-fill justify-content-end align-items-center">
+                @if (!Context.User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Auth" asp-action="Index" class="text-white fw-semibold me-3">Login</a>
+                }
+                else
+                {
+                    <a asp-controller="Auth" asp-action="Logout" class="text-white fw-semibold me-3">Logout</a>
+                }
+
+
+                <button class="btn btnCart me-5" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fas fa-shopping-cart"></i></button>
+
+            </div>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-body p-0 m-0">
+                    <div class="p-4 border-bottom d-flex align-items-center justify-content-between bg-primary" id="colCartNav">
+                        <div class="d-flex align-items-center">
+                            <h2 class="h5 font-weight-bold text-white mb-0">IL TUO CARRELLO</h2>
+                            <i class="fa-solid fa-credit-card ms-3 text-white" title="Pagamento con carta di credito"></i>
+                            <i class="fa-solid fa-location-dot ms-3 text-white" title="Spedizione a domicilio"></i>
+                            <i class="fa-solid fa-lock ms-3 text-white" title="Connessione sicura"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column text-center vh-100 px-2" id="colCartFot">
+                        @await Component.InvokeAsync("Cart")
+                    </div>
+
+
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="grid grid-cols-1">
+        <main role="main">
+
+            <partial name="_Notification" />
+            @RenderBody()
+
+
+        </main>
+    </div>
+
+    <footer id="footImg">
+        <div class="container px-4 pt-5" id="featured-3">
+            <h2 class="pb-2" id="bordoBot">La fine di Epicock</h2>
+            <div class="row row-cols-3">
+                <div class="feature col d-flex flex-column justify-content-center align-items-center">
+                    <div class="feature-icon text-bg-primary bg-gradient fs-2 mb-3">
+                    </div>
+                    <h3 class="fs-2 " id="giallo">Orgasmi perfetti?</h3>
+                    <p>I tuoi orgasmi non soddisfano la tua feroce bestia che ce in te? Allora clicca qui</p>
+                    <a href="#" class="icon-link">
+                        Scoprimi!
+                    </a>
+                </div>
+                <div class="feature col d-flex flex-column justify-content-center align-items-center">
+                    <div class="feature-icon text-bg-primary bg-gradient fs-2 mb-3">
+                    </div>
+                    <h3 class="fs-2 " id="giallo">Chi siamo?</h3>
+                    <p>Dei semplici malati mentali STOP!</p>
+                    <a href="#" class="icon-link">
+                        Scoprici tutti!
+
+                    </a>
+                </div>
+                <div class="feature col d-flex flex-column justify-content-center align-items-center">
+                    <div class="feature-icon text-bg-primary bg-gradient fs-2 mb-3">
+                    </div>
+                    <h3 class="fs-2 " id="giallo">Lavora con noi?</h3>
+                    <p>Si ok ma senza soldi!</p>
+                    <a href="#" class="icon-link">
+                        Clicca qui!
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cartIcon = document.querySelector(".fa-shopping-cart");
+            const cartModal = document.getElementById("cartModal");
+
+
+            cartIcon.addEventListener("click", function () {
+                cartModal.classList.add("active");
+            });
+
+            cartModal.addEventListener("click", function (event) {
+                if (event.target === cartModal) {
+                    cartModal.classList.remove("active");
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Mostra la modale promozionale
+            const promoModal = document.getElementById("promoModal");
+            const closePromo = document.getElementById("closePromo");
+
+            // Funzione per mostrare la modale
+            function showPromoModal() {
+                promoModal.classList.add("active");
+            }
+
+            // Mostra la modale al caricamento della pagina
+            showPromoModal();
+
+            // Chiudi la modale quando l'utente clicca sul pulsante di chiusura
+            closePromo.addEventListener("click", function () {
+                promoModal.classList.remove("active");
+            });
+
+            // Chiudi la modale quando l'utente clicca fuori dalla modale
+            promoModal.addEventListener("click", function (event) {
+                if (event.target === promoModal) {
+                    promoModal.classList.remove("active");
+                }
+            });
+        });
+    </script>
+
+
+
+</body>
+</html>
